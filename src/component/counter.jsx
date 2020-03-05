@@ -1,55 +1,48 @@
 import React, { Component } from "react";
 
 class Counter extends Component {
-  state = {
-    count: 0,
-    tags: []
-  };
-
   render() {
+    const { onIncrement, onDecrement, onDelete, counter } = this.props;
     return (
-      <div>
-        <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
-        <button
-          onClick={this.hanldeIncrement}
-          className="btn btn-secondary btn-sm"
-        >
-          Increment
-        </button>
-        <React.Fragment>
-          {this.state.tags.length === 0 && <p>Crea dei Tags!</p>}
-          {this.renderTags()}
-        </React.Fragment>
+      <div className="row">
+        <div className="col-1">
+          <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
+        </div>
+        <div className="col">
+          <button
+            onClick={() => onIncrement(counter)}
+            className="btn btn-secondary btn-sm"
+          >
+            +
+          </button>
+          <button
+            onClick={() => onDecrement(counter)}
+            className="btn btn-secondary btn-sm m-2"
+            disabled={counter.value === 0 ? true : false}
+          >
+            -
+          </button>
+          <button
+            onClick={() => onDelete(counter.id)}
+            className="btn btn-danger btn-sm"
+          >
+            X
+          </button>
+        </div>
       </div>
     );
   }
 
   formatCount() {
-    const { count } = this.state;
-    return count === 0 ? "Zero" : count;
+    const { value } = this.props.counter;
+    return value === 0 ? "Zero" : value;
   }
 
   getBadgeClasses() {
     let classes = "badge m-2 badge-";
-    classes += this.state.count === 0 ? "warning" : "primary";
+    classes += this.props.counter.value === 0 ? "warning" : "primary";
     return classes;
   }
-
-  renderTags() {
-    if (this.state.tags.length === 0) return <p>Non ci sono tags!</p>;
-
-    return (
-      <ul>
-        {this.state.tags.map(tag => (
-          <li key={tag}>{tag}</li>
-        ))}
-      </ul>
-    );
-  }
-
-  hanldeIncrement = () => {
-    this.setState({ count: this.state.count + 1 });
-  };
 }
 
 export default Counter;
